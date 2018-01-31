@@ -1,6 +1,9 @@
 package com.lakroft.sybase.sybase_client.terminal;
 
+import java.io.FileInputStream;
+import java.io.IOException;
 import java.sql.SQLException;
+import java.util.Properties;
 
 import com.lakroft.sybase.sybase_client.DataBase;
 import com.lakroft.sybase.sybase_client.Listener;
@@ -28,6 +31,7 @@ public class TermListener implements Listener {
 			switch (command) {
 			case "connect":
 				// TODO подгружать из property файла
+				renderer.showMessage("Will be implemented soon\n");
 				break;
 			case "connectby":
 				connectByParam();
@@ -70,7 +74,6 @@ public class TermListener implements Listener {
 	}
 	
 	private String getCommand() {
-		
 		return System.console().readLine();
 	}
 	
@@ -87,6 +90,16 @@ public class TermListener implements Listener {
 			dataBase.connect(url);
 			renderer.showMessage("done\n");
 		} catch (SQLException e) {
+			renderer.error(e);
+		}
+	}
+	
+	private void propsConnect() {
+		try {
+			Properties props = new Properties();
+			props.load(new FileInputStream("default.properties"));
+			
+		} catch (IOException e) {
 			renderer.error(e);
 		}
 	}
