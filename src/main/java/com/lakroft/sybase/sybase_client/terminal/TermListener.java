@@ -31,8 +31,8 @@ public class TermListener implements Listener {
 			}
 			switch (command) {
 			case "connect":
-				// TODO подгружать из property файла
-				renderer.showMessage("Will be implemented soon\n");
+				//renderer.showMessage("Will be implemented soon\n");
+				propsConnect();
 				break;
 			case "connectby":
 				connectByParam();
@@ -103,8 +103,14 @@ public class TermListener implements Listener {
 		try {
 			Properties props = new Properties();
 			props.load(new FileInputStream("default.properties"));
-			
-		} catch (IOException e) {
+			String userName = props.getProperty("user");
+			String pass = props.getProperty("password");
+			String host = props.getProperty("host");
+			String portStr = props.getProperty("port");
+			int port = Integer.parseInt(portStr);
+			dataBase.connect(userName, pass, host, port);
+			renderer.showMessage("done\n");
+		} catch (IOException | SQLException e) {
 			renderer.error(e);
 		}
 	}
