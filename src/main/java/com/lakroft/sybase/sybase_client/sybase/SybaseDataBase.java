@@ -1,6 +1,7 @@
 package com.lakroft.sybase.sybase_client.sybase;
 
 import java.sql.Connection;
+import java.sql.DatabaseMetaData;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
@@ -78,6 +79,20 @@ public class SybaseDataBase implements DataBase {
 			if (!statement.isClosed()) statement.close();
 			statement = null;
 		}
+	}
+
+	@Override
+	public List<String> getTables() throws SQLException {
+		// https://stackoverflow.com/questions/2780284/how-to-get-all-table-names-from-a-database
+		// https://docs.oracle.com/javase/8/docs/api/java/sql/DatabaseMetaData.html#getTables-java.lang.String-java.lang.String-java.lang.String-java.lang.String:A-
+		if (connection == null || connection.isClosed()) return null;
+		DatabaseMetaData md = connection.getMetaData();
+		List<String> tables = new ArrayList<>();
+		ResultSet rs = md.getTables(null, null, "%", null);
+		while (rs.next()) {
+			tables.add(rs.getString(3));
+		}
+		return tables;
 	}
 
 }

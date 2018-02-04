@@ -3,6 +3,7 @@ package com.lakroft.sybase.sybase_client.terminal;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.sql.SQLException;
+import java.util.List;
 import java.util.Properties;
 
 import com.lakroft.sybase.sybase_client.DataBase;
@@ -35,6 +36,9 @@ public class TermListener implements Listener {
 				break;
 			case "connectby":
 				connectByParam();
+				break;
+			case "tables":
+				showTables();
 				break;
 			case "disc":
 				try {
@@ -74,6 +78,7 @@ public class TermListener implements Listener {
 	}
 	
 	private String getCommand() {
+		renderer.showMessage(">");
 		return System.console().readLine();
 	}
 	
@@ -128,12 +133,31 @@ public class TermListener implements Listener {
 		}
 	}
 	
+	private void showTables() {
+		if (dataBase.isConnected()) {
+			try {
+				List<String> tables = dataBase.getTables();
+				renderer.showMessage("Tables:\n");
+				for (String table : tables) {
+					renderer.showMessage("\t" + table + "\n");
+				}
+				renderer.showMessage("End.\n");
+			} catch (SQLException e) {
+				renderer.error(e);
+			}
+			
+		} else {
+			renderer.showMessage("No connection");
+		}
+	}
+	
 	private static final String MENU = "\t MENU:\n" +
 			"connect - connect to DB with default settings\n" +
 			"connectstr - connect dy URL string\n" + 
 			"connectby - connect with params (whoud be asced)\n" +
+			"tables - shows list of tables\n" +
 			"sql [sql] - execute sql command\n" +
 			"disc - disconnect from DB\n" +
-			"menu|help|h - show this menu" +
+			"menu|help|h - show this menu\n" +
 			"exit|quit|q - exit program\n";
 }

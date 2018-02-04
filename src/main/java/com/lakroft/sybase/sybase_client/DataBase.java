@@ -11,6 +11,8 @@ public interface DataBase {
 	public abstract void connect (String url)  throws SQLException;
 	public abstract void connect (String user, String pass, String ip, int portNum) throws SQLException;
 	
+	public abstract List <String> getTables() throws SQLException;
+	
 	public abstract Boolean isConnected ();
 	public abstract void disconnect() throws SQLException;
 }
